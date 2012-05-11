@@ -32,6 +32,9 @@ server {
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header Host $http_host;
+    <% if node["jenkins"]["http_proxy"]["ssl"] %>
+    proxy_redirect http://127.0.0.1:<%= node[:jenkins][:server][:port] %>/ /;
+    <% end %>
     <% unless node["jenkins"]["http_proxy"]["auth_users"].nil? %>
     auth_basic            "Restricted";
     auth_basic_user_file  jenkins_htpasswd;
