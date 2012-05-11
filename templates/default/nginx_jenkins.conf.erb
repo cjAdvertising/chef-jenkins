@@ -15,9 +15,15 @@ server {
 <% end -%>
 server {
 <% @listen_ports.each do |port| -%>
-  listen            <%= port %>;
+  listen <%= port %><% if node["jenkins"]["http_proxy"]["ssl"] %> ssl<% end %>;
+
 <% end -%>
   server_name       <%= @host_name %><% @host_aliases.each do |a| %><%= " #{a}" %> <% end %>;
+
+  <% if node["jenkins"]["http_proxy"]["ssl"] %>
+  ssl_certificate      <%= node["jenkins"]["http_proxy"]["ssl_cert"] %>;
+  ssl_certificate_key  <%= node["jenkins"]["http_proxy"]["ssl_key"] %>;
+  <% end %>
 
   client_max_body_size <%= @max_upload_size %>;
 
@@ -26,6 +32,10 @@ server {
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header Host $http_host;
+    <% unless node["jenkins"]["http_proxy"]["auth_users"].nil? %>
+    auth_basic            "Restricted";
+    auth_basic_user_file  jenkins_htpasswd;
+    <% end %>
   }
 
   error_log         <%= node[:nginx][:log_dir] %>/jenkins-error.log;

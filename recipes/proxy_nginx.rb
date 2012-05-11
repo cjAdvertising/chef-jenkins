@@ -47,6 +47,15 @@ template "#{node[:nginx][:dir]}/sites-available/jenkins.conf" do
   end
 end
 
+unless node["jenkins"]["http_proxy"]["auth_users"].nil?
+  template "#{node["nginx"]["dir"]}/jenkins_htpasswd" do
+    source "htpasswd.erb"
+    owner "root"
+    group "root"
+    mode "0644"
+  end
+end
+
 nginx_site "jenkins.conf" do
   if node[:jenkins][:http_proxy][:variant] == "nginx"
     enable true

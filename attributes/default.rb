@@ -120,3 +120,7 @@ default[:jenkins][:http_proxy][:listen_ports]         = [ 80 ]
 default[:jenkins][:http_proxy][:host_name]            = nil
 default[:jenkins][:http_proxy][:host_aliases]         = []
 default[:jenkins][:http_proxy][:client_max_body_size] = "1024m"
+default[:jenkins][:http_proxy][:ssl] = false
+default[:jenkins][:http_proxy][:auth_users] = nil
+default[:jenkins][:http_proxy][:ssl_cert] = ::File.join(node[:jenkins][:server][:home], "ssl.crt")
+default[:jenkins][:http_proxy][:ssl_key] = ::File.join(node[:jenkins][:server][:home], "ssl.key")
