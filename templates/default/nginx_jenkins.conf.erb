@@ -33,7 +33,7 @@ server {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header Host $http_host;
     <% if node["jenkins"]["http_proxy"]["ssl"] %>
-    proxy_redirect http://127.0.0.1:<%= node[:jenkins][:server][:port] %>/ /;
+    proxy_redirect http://<%= @host_name %>/ https://<%= @host_name %>/;
     <% end %>
     <% unless node["jenkins"]["http_proxy"]["auth_users"].nil? %>
     auth_basic            "Restricted";
